@@ -4,17 +4,29 @@ import { COLORS, NFTData } from "../constants";
 // FlatList is hot loading feature
 import { NFTCard, HomeHeader, FocusedStatusBar } from "../components";
 const Home = ({ navigation }) => {
+  const [nftData, setNftData] = useState(NFTData);
+  const handleSearch = (value) => {
+    if (!value.length) setNftData(NFTData);
+    const filtered = NFTData.filter((item) =>
+      item.name.toLowerCase().includes(value.toLowerCase())
+    );
+    if (filtered.length) {
+      setNftData(filtered);
+    } else {
+      setNftData(NFTData);
+    }
+  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <FocusedStatusBar backgroundColor={COLORS.primary} />
       <View style={{ flex: 1 }}>
         <View style={{ zIndex: 0 }}>
           <FlatList
-            data={NFTData}
+            data={nftData}
             renderItem={({ item }) => <NFTCard data={item} />}
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
-            ListHeaderComponent={<HomeHeader />}
+            ListHeaderComponent={<HomeHeader onSearch={handleSearch} />}
           />
         </View>
         <View
